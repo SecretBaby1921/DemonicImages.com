@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Demonic Images Generator</title>
+  <style>
+    .button {
+      background-color: darkred;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Demonic Images Generator</h1>
+  <button class="button" id="generateButton">Generate ImageUrl</button>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    const API_KEY = '38960002-b90ea58fefc8e47c6e9e5b507';
+
+    async function getRandomImage() {
+      const url = `https://pixabay.com/api/?key=${API_KEY}&order=popular&per_page=200`;
+      try {
+        const response = await axios.get(url);
+        const data = response.data;
+        const randomIndex = Math.floor(Math.random() * data.hits.length);
+        const randomImage = data.hits[randomIndex];
+        return randomImage;
+      } catch (error) {
+        console.error('Error:', error);
+        throw error;
+      }
+    }
+
+    function copyToClipboard(text) {
+      const tempInput = document.createElement('input');
+      tempInput.value = text;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempInput);
+    }
+
+    document.getElementById('generateButton').addEventListener('click', function() {
+      getRandomImage()
+        .then((randomImage) => {
+          const imageUrl = randomImage.webformatURL;
+          copyToClipboard(imageUrl);
+          console.log('Copied');
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    });
+  </script>
+</body>
+</html>
